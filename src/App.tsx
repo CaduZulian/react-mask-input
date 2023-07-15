@@ -1,10 +1,12 @@
 import React from 'react';
+import './App.css';
+import { Input } from './components/Input';
 
 export default function App() {
   return (
-    <div>
-      <h1>React App</h1>
-      <p>React App</p>
-    </div>
+    <Input
+      mask='+55 (99) 99999-9999'
+      // maskChar="_"
+    />
   );
 }

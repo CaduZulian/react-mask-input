@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 const APP_PATH = './public';
@@ -23,6 +24,14 @@ const config = {
         loader: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/i,
+        exclude: /node_modules/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      },
     ],
   },
 
@@ -31,6 +40,7 @@ const config = {
       inject: true,
       template: path.join(APP_PATH, 'index.html'),
     }),
+    new MiniCssExtractPlugin()
   ],
 };
 
