@@ -23,6 +23,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.5.3",
+    "husky": "^8.0.3",
     "prettier": "^3.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -36,7 +37,19 @@
   "scripts": {
     "start": "webpack serve --progress --hot --port 8080 --stats-children",
     "build": "cross-env NODE_ENV=production babel src --out-dir dist",
-    "format": "prettier --write ."
+    "prepare": "husky install",
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
+    "check-lint": "eslint .",
+    "check-types": "tsc --pretty --noEmit"
+  },
+  "husky": {
+    "hooks": {
+      "applypatch-msg": "echo \"[Husky] applypatch-msg\"",
+      "pre-applypatch": "echo \"[Husky] pre-applypatch\"",
+      "post-applypatch": "echo \"[Husky] post-applypatch\"",
+      "pre-commit": "echo \"[Husky] pre-commit\""
+    }
   },
   "files": [
     "dist",
