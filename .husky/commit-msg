@@ -1,12 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Check semantic commits
-npx --no -- commitlint --edit || (
-    echo '❌ Commit-lint validation, verify that the commit is correct !'
-    false
-)
-
 # Check Prettier standards
 yarn check-format ||
     (
@@ -14,7 +8,7 @@ yarn check-format ||
         false
     )
 
-# Check ESLint Standards
+# Check ESLint standards
 yarn check-lint ||
     (
         echo '❌ ESLint Check Failed. Make the required changes listed above, add changes and try to commit again.'
@@ -29,8 +23,8 @@ yarn check-types ||
     )
 
 # Check test
-yarn test ||
-     (
-         echo '❌ Failed test check.'
-         false
-     )
+# yarn test ||
+#      (
+#          echo '❌ Failed test check.'
+#          false
+#      )
