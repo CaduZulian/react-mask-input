@@ -2,12 +2,8 @@ import React from 'react';
 import { ChangeEvent, KeyboardEvent, FocusEvent } from 'react';
 import './styles.css';
 import { defaultChars } from '../../constants';
-
-export interface InputMaskProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  mask: string;
-  maskChar?: string;
-}
+import { maskText } from '../../utils';
+import { InputMaskProps } from './models';
 
 export const Input = ({
   onChange,
@@ -30,6 +26,28 @@ export const Input = ({
     .findIndex((char) => defaultCharsArray.includes(char));
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const baseValue = event.target.value.slice(
+      0,
+      event.target.selectionStart ?? 0
+    );
+
+    if (baseValue) {
+      event.target.value = maskText(baseValue, mask, maskChar);
+    }
+
+    window.requestAnimationFrame(() => {
+      const cursorPosition = mask
+        .split('')
+        .findIndex(
+          (char, index) =>
+            defaultCharsArray.includes(char) &&
+            (!event.target.value[index] ||
+              (maskChar && event.target.value[index] === maskChar))
+        );
+
+      event.target.setSelectionRange(cursorPosition, cursorPosition);
+    });
+
     if (onChange) {
       onChange(event);
     }
@@ -60,8 +78,6 @@ export const Input = ({
               (!event.target.value[index] ||
                 (maskChar && event.target.value[index] === maskChar))
           );
-
-        console.log(cursorPosition);
 
         event.target.setSelectionRange(cursorPosition, cursorPosition);
       });
