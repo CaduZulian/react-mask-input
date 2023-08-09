@@ -14,6 +14,7 @@ export const removeMask = (value: string, mask: string, maskChar?: string) => {
     ) {
       acc.push(valueChars[index]);
     }
+
     return acc;
   }, [] as string[]);
 
@@ -27,7 +28,6 @@ export const maskText = (value: string, mask: string, maskChar?: string) => {
   const maskChars = mask.split('');
 
   const result = maskChars.reduce((acc, char, index) => {
-    console.log(valueChars, index);
     if (defaultCharsArray.includes(char)) {
       if (valueChars[index]) {
         acc.push(valueChars[index]);
@@ -37,6 +37,7 @@ export const maskText = (value: string, mask: string, maskChar?: string) => {
     } else {
       acc.push(char);
     }
+
     return acc;
   }, [] as string[]);
 

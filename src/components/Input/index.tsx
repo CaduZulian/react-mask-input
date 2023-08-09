@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChangeEvent, KeyboardEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent } from 'react';
 import './styles.css';
 import { defaultChars } from '../../constants';
 import { maskText } from '../../utils';
@@ -7,7 +7,6 @@ import { InputMaskProps } from './models';
 
 export const Input = ({
   onChange,
-  onKeyDown,
   onFocus,
   onBlur,
   mask,
@@ -26,36 +25,36 @@ export const Input = ({
     .findIndex((char) => defaultCharsArray.includes(char));
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const baseValue = event.target.value.slice(
-      0,
-      event.target.selectionStart ?? 0
-    );
+    const cursorPosition = event.target.selectionStart ?? 0;
+
+    const baseValue = event.target.value.slice(0, cursorPosition);
 
     if (baseValue) {
       event.target.value = maskText(baseValue, mask, maskChar);
     }
 
     window.requestAnimationFrame(() => {
-      const cursorPosition = mask
-        .split('')
-        .findIndex(
-          (char, index) =>
-            defaultCharsArray.includes(char) &&
-            (!event.target.value[index] ||
-              (maskChar && event.target.value[index] === maskChar))
-        );
+      if (!defaultCharsArray.includes(mask.split('')[cursorPosition])) {
+        let newCursorPosition = mask
+          .slice(cursorPosition, mask.length)
+          .split('')
+          .findIndex((char) => defaultCharsArray.includes(char));
 
-      event.target.setSelectionRange(cursorPosition, cursorPosition);
+        if (newCursorPosition === -1) {
+          newCursorPosition = 0;
+        }
+
+        event.target.setSelectionRange(
+          cursorPosition + newCursorPosition,
+          cursorPosition + newCursorPosition
+        );
+      } else {
+        event.target.setSelectionRange(cursorPosition, cursorPosition);
+      }
     });
 
     if (onChange) {
       onChange(event);
-    }
-  };
-
-  const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (onKeyDown) {
-      onKeyDown(event);
     }
   };
 
@@ -106,7 +105,6 @@ export const Input = ({
         type='text'
         id='mask'
         onChange={handleOnChange}
-        onKeyDown={handleOnKeyDown}
         onFocus={handleOnFocus}
         onBlur={handleOnBlur}
         {...props}
